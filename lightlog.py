@@ -49,16 +49,14 @@ def process_logger(queue):
                 logger.addHandler(handler)
             logger.handle(record)
         except Exception:
-            import traceback
-            print('--unlight2-- log err:', file=stderr)
-            traceback.print_exc(file=stderr)
+            raise Exception('-- LogServer -- error')
 
 
 class Logger:
-    ''' log client
-    0. no queue: single process server, records files local(default)
-    1. use queue: multi-process server, records files local by log process
-    2. no address: single/multi-process server, records files remote server
+    ''' logger
+        0. no queue: single process server, records files local(default)
+        1. use queue: multi-process server, records files local by log process
+        2. no address: single/multi-process server, records files remote server
     '''
     queue = None
 
@@ -200,7 +198,7 @@ class LogServer:
     def run(cls):
         address = config_dict.get("address")
         if not address:
-            print("--LogServer-- \n` config_dict.address ` is empty!", file=stdout)
+            raise ValueError("-- LogServer -- error:\n` config_dict.address ` is empty!")
         is_mp = config_dict.get("is_mp")
         level = config_dict.get("level")
         is_detail = config_dict.get("is_detail")

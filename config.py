@@ -2,7 +2,6 @@ from os import getcwd as osgetcwd
 import logging
 
 DEFAULT_LOG_CONFIG = {
-    ### --------------- client
     ## log file name
     "fname": "unlight2",
 
@@ -27,7 +26,7 @@ DEFAULT_LOG_CONFIG = {
     ## log record detail formatter
     "dfmt": "%(asctime)s[%(levelname)s][pid:%(process)d][tid:%(thread)d] %(message)s",
 
-    ### --------------- server
+    ### --------------- use remote server
     ## use log server > address: ("localhost", 9939)
     "address": (),
 
