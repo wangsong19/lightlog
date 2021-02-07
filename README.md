@@ -17,4 +17,37 @@
 ### Use
 
 	Command it:
-	```setup setup.py install```
+	``` shell
+		setup setup.py install
+	```
+
+	``` python
+		import lightlog
+
+		# single process
+		task_log = lightlog.get_logger(fname="task_log")
+		# set level if need (default is INFO)
+		# from logging import DEBUG
+		# task_log.set_level(DEBUG)
+		task_log.info("------ task has done! -------")
+
+		# multi-process
+		from multiprocessing import Queue, Process
+		queue = Queue()
+		# new process
+		log_worker = Process(target=lightlog.process_log, queue=queue)
+		log_worker.start()
+		log_worker.join()
+		# move queue to lightlog once
+		task_log = lightlog.get_logger(fname="task_log", queue=queue)
+		task_log.info("------ new task has done! -------")
+
+		# remote server to save log
+		# set remote address and use multi-porcess then start it
+		config_dict = {"address": ("192.168.9.99", 9939), "is_mp": True}
+		lightlog.lightconfig.load(config_dict)
+		lightlog.LogServer.run()
+		# use it this server as usual
+		task_log = lightlog.get_logger(fname="task_log")
+		task_log.info("------ remote new task has done! -------")
+	```
