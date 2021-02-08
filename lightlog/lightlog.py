@@ -18,13 +18,13 @@ from socketserver import (
 from struct import unpack as sunpack
 from pickle import loads as ploads
 
-from config import lightconfig
+from .config import lightconfig
 config_dict = lightconfig.config
 
 def get_logger(fname=config_dict["fname"], is_detail=False, queue=None):
     ''' get a specific file output record logger 
-        :fname: output path file name
-        :is_detail: record formats as detial or not
+            :fname: output path file name
+            :is_detail: record formats as detial or not
     '''
     return Logger(fname, is_detail, queue)
 
@@ -70,9 +70,9 @@ def process_logger(queue):
 
 class Logger:
     ''' logger
-        0. no queue: single process server, records files local(default)
-        1. use queue: multi-process server, records files local by log process
-        2. no address: single/multi-process server, records files remote server
+        no queue: single process server, records files local(default)
+        use queue: multi-process server, records files local by log process
+        no address: single/multi-process server, records files remote server
     '''
     queue = None
 
@@ -209,6 +209,11 @@ class RecordReceiverFork(ForkingTCPServer):
         self.stop = 1
 
 class LogServer:
+    ''' log server for remote records
+        >>> from lightlog import LogServer, lightconfig
+        >>> lightconfig.load({"address": ("192.168.xx.xx", 9939)}) # set `"is_mp": True` if use multi-p
+        >>> LogServer.run() # start ok
+    '''
                       
     @classmethod
     def run(cls):

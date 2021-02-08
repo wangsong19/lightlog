@@ -6,12 +6,12 @@ import os
 from lightlog import (
         get_logger, 
         get_ready_log_worker, 
-        lightconfig, 
-        LogServer)
+        LogServer,
+        lightconfig)
 
 # test for single process log
 def print_log_second():
-    logger = get_logger(fname="lightlog")
+    logger = get_logger(fname="lightlog_test")
     i = 0
     while True:
         if i > 120: break

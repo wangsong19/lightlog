@@ -48,7 +48,9 @@
                     
         b. happy to use it.
 '''
-
-import .lightconfig
-import .lightlog
-__all__ = ["lightconfig", "get_logger", "get_ready_log_worker", "LogServer"]
+from .lightlog import (
+        get_logger,
+        get_ready_log_worker,
+        LogServer)
+from .config import lightconfig
+__all__ = ["get_logger", "get_ready_log_worker", "lightconfig", "LogServer"]
