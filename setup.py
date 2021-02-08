@@ -1,5 +1,6 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 from codecs import open
+from os import system
 setup(
     name='lightlog',
     version='0.1',
@@ -19,3 +20,4 @@ setup(
     ],
     py_modules=["lightlog"],
 )
+system("rm -rf build dist lightlog.egg-info")
