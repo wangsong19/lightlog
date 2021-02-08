@@ -23,7 +23,7 @@ def print_log_second():
 # test for multi-process log
 def test_multi_process():
     # set log worker
-    log_worker = get_ready_log_worker()
+    log_worker = get_ready_log_worker(fname="lightlog_test")
     log_worker.start()
     # set rabot to records log
     worker1 = multiprocessing.Process(target=print_log_second)

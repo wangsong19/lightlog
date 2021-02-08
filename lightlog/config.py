@@ -3,7 +3,7 @@ import logging
 
 DEFAULT_LOG_CONFIG = {
     ## log file name
-    "fname": "unlight2",
+    "fname": "",
 
     ## file path dir(use local server)
     "dir": osgetcwd(),

@@ -34,12 +34,16 @@
 		## multi-process
 		from multiprocessing import Queue, Process
 		# in main-process
-		log_worker = lightlog.get_ready_log_worker()
+		log_worker = lightlog.get_ready_log_worker(fname="task_log") # will create first logger `task_log`
 		log_worker.start()
 		log_worker.join()
 		# in sub-process
 		task_log = lightlog.get_logger(fname="task_log")
 		task_log.info("------ new task has done! -------")
+		# we can get a new logger as debug
+		debug_log = lightlog.get_logger(fname="debug")
+		debug_log.set_level(DEBUG)
+		debug_log.info("------ debug something -------")
 
 		## remote server to save log
 		# set remote address and use multi-porcess then start it

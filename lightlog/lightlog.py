@@ -21,25 +21,33 @@ from pickle import loads as ploads
 from .config import lightconfig
 config_dict = lightconfig.config
 
-def get_logger(fname=config_dict["fname"], is_detail=False, queue=None):
+__all__ = ("get_logger", "get_ready_log_worker", "LogServer")
+
+def get_logger(fname=config_dict["fname"], is_detail=False):
     ''' get a specific file output record logger 
             :fname: output path file name
             :is_detail: record formats as detial or not
     '''
-    return Logger(fname, is_detail, queue)
+    if not fname:
+        raise ValueError("-- LogServer -- error:\nyou shold provide fname in log config_dict to load or specific it as param")
+    return Logger(fname, is_detail)
 
-def get_ready_log_worker(is_detail=False):
+def get_ready_log_worker(fname=config_dict["fname"], is_detail=False):
     ''' used in local log multi-process and process safe
         e.g.  
             log_worker = lightlog.get_log_worker()
             log_worker.start()
             log_worker.join() # block main process
     '''
+
+    if not fname:
+        raise ValueError("-- LogServer -- error:\nyou shold provide fname in log config_dict to load or specific it as param")
+
     import signal
     from multiprocessing import Process, Queue
 
     queue = Queue(-1)
-    Logger(fname=config_dict["fname"], is_detail=is_detail, queue=queue)
+    Logger(fname=fname, is_detail=is_detail, queue=queue)
     log_worker = Process(target=process_logger, args=(queue,), daemon=True)
     signal.signal(signal.SIGINT, lambda s, f: log_worker.kill())
     signal.signal(signal.SIGTERM, lambda s, f: log_worker.kill())
