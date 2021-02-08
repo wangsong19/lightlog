@@ -22,10 +22,12 @@
                     >>> task_log.info("player one just finishs new-player task..")
 
                 multi-process: provide one queue to log process
-                    >>> queue = multiporcessing.Queue(-1) # no limit
-                    >>> lightlog.get_logger(queue=queue)  # move the queue to root logger
-                    >>> log_worker = multiporcessing.Process(
-                    >>>     target=lightlog.process_logger, args=(queue)) # start log process
+                    # main-process
+                    >>> log_worker = lightlog.get_ready_log_worker()
+                    >>> log_worker.start()
+                    >>> log_worker.join()
+                    
+                    # sub-process
                     >>> task_log = lightlog.get_logger(fname="task")      # process-1
                     >>> task_log = lightlog.get_logger(fname="task")      # process-2
                     >>> task_log.info("player one just finishs new-player task..")
@@ -49,4 +51,4 @@
 
 import .lightconfig
 import .lightlog
-__all__ = ["lightconfig", "get_logger", "process_logger", "LogServer"]
+__all__ = ["lightconfig", "get_logger", "get_ready_log_worker", "LogServer"]

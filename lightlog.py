@@ -28,8 +28,25 @@ def get_logger(fname=config_dict["fname"], is_detail=False, queue=None):
     '''
     return Logger(fname, is_detail, queue)
 
+def get_ready_log_worker(is_detail=False):
+    ''' used in local log multi-process and process safe
+        e.g.  
+            log_worker = lightlog.get_log_worker()
+            log_worker.start()
+            log_worker.join() # block main process
+    '''
+    import signal
+    from multiprocessing import Process, Queue
+
+    queue = Queue(-1)
+    Logger(fname=config_dict["fname"], is_detail=is_detail, queue=queue)
+    log_worker = Process(target=process_logger, args=(queue,), daemon=True)
+    signal.signal(signal.SIGINT, lambda s, f: log_worker.kill())
+    signal.signal(signal.SIGTERM, lambda s, f: log_worker.kill())
+    return log_worker
+
 def process_logger(queue):
-    ''' used in local log multi-process and process safe. e.g.
+    ''' handle multi-process log from queue
         log_worker = multiprocessing.Process(
                 target=process_logger, args=(queue,), daemon=True)
         log_worker.start()
@@ -50,7 +67,6 @@ def process_logger(queue):
             logger.handle(record)
         except Exception:
             raise Exception('-- LogServer -- error')
-
 
 class Logger:
     ''' logger
