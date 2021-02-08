@@ -22,6 +22,15 @@ from .config import lightconfig
 config_dict = lightconfig.config
 
 __all__ = ("get_logger", "get_ready_log_worker", "LogServer")
+LOGGER_DICT = {}
+
+def log_handle(fname, is_detail, queue=None):
+    obj = LOGGER_DICT.get(fname)
+    if obj:
+        return obj
+    logger = Logger(fname, is_detail, queue)
+    LOGGER_DICT[logger] = logger
+    return logger
 
 def get_logger(fname=config_dict["fname"], is_detail=False):
     ''' get a specific file output record logger 
@@ -30,7 +39,7 @@ def get_logger(fname=config_dict["fname"], is_detail=False):
     '''
     if not fname:
         raise ValueError("-- LogServer -- error:\nyou shold provide fname in log config_dict to load or specific it as param")
-    return Logger(fname, is_detail)
+    return log_handle(fname, is_detail)
 
 def get_ready_log_worker(fname=config_dict["fname"], is_detail=False):
     ''' used in local log multi-process and process safe
@@ -48,7 +57,7 @@ def get_ready_log_worker(fname=config_dict["fname"], is_detail=False):
     from multiprocessing import Process, Queue
 
     queue = Queue(-1)
-    logger = Logger(fname=fname, is_detail=is_detail, queue=queue)
+    logger = log_handle(fname=fname, is_detail=is_detail, queue=queue)
     log_worker = Process(target=process_logger, args=(queue,), daemon=True)
     signal.signal(signal.SIGINT, lambda s, f: log_worker.kill())
     signal.signal(signal.SIGTERM, lambda s, f: log_worker.kill())

@@ -2,6 +2,7 @@ import multiprocessing
 import time
 import signal
 import os
+import random
 
 from lightlog import (
         get_logger, 
@@ -16,8 +17,12 @@ def print_log_second():
     while True:
         if i > 120: break
         time.sleep(1)
-        logger.info("--- you have a new log message, please record it!", 
-                i, " > Process-", os.getpid())
+        if random.random() > 0.5:
+            logger.info("--- you have a new log message, please record it!", 
+                    i, " > Process-", os.getpid())
+        else:
+            logger.error("--- you have a new log message, please record it!", 
+                    i, " > Process-", os.getpid())
         i += 1
 
 # test for multi-process log
