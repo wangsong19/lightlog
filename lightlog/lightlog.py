@@ -209,7 +209,7 @@ class RecordReceiverFork(ForkingTCPServer):
             handler=RecordStreamHandler):
         ForkingTCPServer.__init__(self, (host, port), handler)
         self.stop = 0
-        self.timeout = 3
+        self.timeout = 1
     
     def serve_until_stopped(self):
         import select
