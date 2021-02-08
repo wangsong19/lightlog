@@ -21,9 +21,8 @@ from pickle import loads as ploads
 from .config import lightconfig
 config_dict = lightconfig.config
 
-__all__ = ("get_logger", "get_ready_log_worker", "LogServer")
-LOGGER_DICT = {}
 
+LOGGER_DICT = {}
 def log_handle(fname, is_detail, queue=None):
     obj = LOGGER_DICT.get(fname)
     if obj:
@@ -263,3 +262,5 @@ class LogServer:
         finally:
             logger.info("log server shutdown .. good bye~")
             tcpserver.server_close()
+
+__all__ = ("get_logger", "get_ready_log_worker", "LogServer")

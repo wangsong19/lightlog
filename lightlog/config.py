@@ -63,3 +63,4 @@ class LightConfig:
                         f"please ensure that you have set up log server on {v[0]}")
 
 lightconfig = LightConfig.get_instance()
+__all__ = ("lightconfig")
