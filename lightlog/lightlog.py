@@ -38,6 +38,7 @@ def get_ready_log_worker(fname=config_dict["fname"], is_detail=False):
             log_worker = lightlog.get_log_worker()
             log_worker.start()
             log_worker.join() # block main process
+        return log_worker, logger
     '''
 
     if not fname:
@@ -47,11 +48,11 @@ def get_ready_log_worker(fname=config_dict["fname"], is_detail=False):
     from multiprocessing import Process, Queue
 
     queue = Queue(-1)
-    Logger(fname=fname, is_detail=is_detail, queue=queue)
+    logger = Logger(fname=fname, is_detail=is_detail, queue=queue)
     log_worker = Process(target=process_logger, args=(queue,), daemon=True)
     signal.signal(signal.SIGINT, lambda s, f: log_worker.kill())
     signal.signal(signal.SIGTERM, lambda s, f: log_worker.kill())
-    return log_worker
+    return log_worker, logger
 
 def process_logger(queue):
     ''' handle multi-process log from queue

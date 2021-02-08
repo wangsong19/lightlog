@@ -23,8 +23,9 @@ def print_log_second():
 # test for multi-process log
 def test_multi_process():
     # set log worker
-    log_worker = get_ready_log_worker(fname="lightlog_test")
+    log_worker, logger = get_ready_log_worker(fname="lightlog_test")
     log_worker.start()
+    logger.info("------- log_worker has been started, Process-", os.getpid())
     # set rabot to records log
     worker1 = multiprocessing.Process(target=print_log_second)
     worker1.start()
