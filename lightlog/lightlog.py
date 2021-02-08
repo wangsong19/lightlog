@@ -52,14 +52,11 @@ def get_ready_log_worker(fname=config_dict["fname"], is_detail=False):
     if not fname:
         raise ValueError("-- LogServer -- error:\nyou shold provide fname in log config_dict to load or specific it as param")
 
-    import signal
     from multiprocessing import Process, Queue
 
     queue = Queue(-1)
     logger = log_handle(fname=fname, is_detail=is_detail, queue=queue)
     log_worker = Process(target=process_logger, args=(queue,), daemon=True)
-    signal.signal(signal.SIGINT, lambda s, f: log_worker.kill())
-    signal.signal(signal.SIGTERM, lambda s, f: log_worker.kill())
     return log_worker, logger
 
 def process_logger(queue):
@@ -83,6 +80,7 @@ def process_logger(queue):
                 logger.addHandler(handler)
             logger.handle(record)
         except Exception:
+            queue.close()
             raise Exception('-- LogServer -- error')
 
 class Logger:
