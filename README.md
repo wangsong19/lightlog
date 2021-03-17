@@ -17,11 +17,11 @@
 ### Use
 
 	Command it:
-	``` bash
+	```bash
 		setup setup.py install
 	```
 
-	``` python
+	```python
 		import lightlog
 
 		## single process
